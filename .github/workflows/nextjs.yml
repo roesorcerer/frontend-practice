@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Print directory structure for debugging
         run: |
           echo "Current Directory: $(pwd)"
@@ -44,30 +44,30 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           static_site_generator: next
-      
+
       - name: Restore cache
         uses: actions/cache@v4
         with:
-          path: /qr-code/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('/qr-code/**/package-lock.json', '/qr-code/**/yarn.lock') }}-${{ hashFiles('/qr-code/**.[jt]s', '/qr-code/**.[jt]sx') }}
+          path: qr-code/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('qr-code/**/package-lock.json', 'qr-code/**/yarn.lock') }}-${{ hashFiles('qr-code/**.[jt]s', 'qr-code/**.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('/qr-code/**/package-lock.json', '/qr-code/**/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('qr-code/**/package-lock.json', 'qr-code/**/yarn.lock') }}-
 
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
         working-directory: qr-code
-      
+
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
         working-directory: qr-code
