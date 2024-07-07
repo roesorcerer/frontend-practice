@@ -50,6 +50,15 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Verify package-lock.json presence
+        run: |
+          if [ -f "qr-code/package-lock.json" ]; then
+            echo "package-lock.json found in qr-code"
+          else
+            echo "package-lock.json not found in qr-code"
+            exit 1
+          fi
+
       - name: Restore cache
         uses: actions/cache@v4
         with:
