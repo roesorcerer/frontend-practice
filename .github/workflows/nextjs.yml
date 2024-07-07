@@ -21,11 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Print directory structure for debugging
-        run: |
-          echo "Current Directory: $(pwd)"
-          echo "Directory Structure:"
-          ls -R
+      - name: Print current directory
+        run: echo "Current Directory: $(pwd)"
+
+      - name: List repository files for debugging
+        run: ls -R
 
       - name: Detect package manager
         id: detect-package-manager
@@ -50,6 +50,9 @@ jobs:
         with:
           node-version: "20"
           cache: npm
+
+      - name: List qr-code directory files for debugging
+        run: ls -R qr-code
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
