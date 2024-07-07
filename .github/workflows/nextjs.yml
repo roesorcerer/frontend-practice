@@ -18,14 +18,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print current directory
-        run: echo "Current Directory: $(pwd)"
-
-      - name: List repository files for debugging
-        run: ls -R
+      - name: Print working directory and list files
+        run: |
+          echo "Current Directory: $(pwd)"
+          ls -R
 
       - name: Detect package manager
         id: detect-package-manager
@@ -45,19 +44,11 @@ jobs:
             exit 1
           fi
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
-
-      - name: List qr-code directory files for debugging
-        run: ls -R qr-code
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
+          node-version: '20'
+          cache: 'npm'
 
       - name: Restore cache
         uses: actions/cache@v4
@@ -71,11 +62,11 @@ jobs:
         run: npm ci
         working-directory: qr-code
 
-      - name: Build with Next.js
+      - name: Build Next.js application
         run: npx next build
         working-directory: qr-code
 
-      - name: Upload artifact
+      - name: Upload build artifacts
         uses: actions/upload-pages-artifact@v3
         with:
           path: qr-code/out
@@ -89,4 +80,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-  uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v4
