@@ -30,14 +30,14 @@ jobs:
       - name: Detect package manager
         id: detect-package-manager
         run: |
-          if [ -f "${{ github.workspace }}/qr-code/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn" >> $GITHUB_OUTPUT
+          if [ -f "${{ github.workspace }}/qr-code/package-lock.json" ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "command=ci" >> $GITHUB_OUTPUT
+            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
             exit 0
           elif [ -f "${{ github.workspace }}/qr-code/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
+            echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
             exit 0
           else
@@ -49,7 +49,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
+          cache: npm
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -60,16 +60,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: qr-code/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('qr-code/package-lock.json', 'qr-code/yarn.lock') }}-${{ hashFiles('qr-code/**/*.[jt]s', 'qr-code/**/*.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('qr-code/package-lock.json') }}-${{ hashFiles('qr-code/**/*.[jt]s', 'qr-code/**/*.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('qr-code/package-lock.json', 'qr-code/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('qr-code/package-lock.json') }}-
 
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        run: npm ci
         working-directory: qr-code
 
       - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        run: npx next build
         working-directory: qr-code
 
       - name: Upload artifact
